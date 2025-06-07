@@ -1,4 +1,3 @@
-{{ if .Values.apps.argo-cd.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -7,14 +6,13 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: {{ .Values.apps.argo-cd.repoURL }}
-    chart: {{ .Values.apps.argo-cd.chart }}
-    targetRevision: {{ .Values.apps.argo-cd.targetRevision }}
+    repoURL: { { .Values.apps.argo-cd.repoURL } }
+    chart: { { .Values.apps.argo-cd.chart } }
+    targetRevision: { { .Values.apps.argo-cd.targetRevision } }
   destination:
     server: https://kubernetes.default.svc
-    namespace: {{ .Values.apps.argo-cd.namespace }}
+    namespace: { { .Values.apps.argo-cd.namespace } }
   syncPolicy:
     automated:
       selfHeal: true
       prune: true
-{{ end }}

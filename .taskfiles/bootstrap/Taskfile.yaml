@@ -69,6 +69,7 @@ tasks:
         --set operator.replicas=1
 
       - kubectl delete daemonset kube-flannel -n kube-system || true
+      - kubectl delete daemonset -n kube-system kube-proxy || true
       - kubectl delete cm kube-flannel-cfg -n kube-system || true
 
   _test-cilium:
@@ -85,3 +86,4 @@ tasks:
           echo "❌ Cilium test failed (actual errors)"
           exit 1
         fi
+      - kubectl delete namespace cilium-test-1 || true

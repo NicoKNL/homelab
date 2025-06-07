@@ -1,41 +1,41 @@
 version: "3"
 
 tasks:
-  bootstrap:
+  default:
     desc: Bootstrap the full Talos + Cilium + ArgoCD setup
     vars:
-      NODE:
+      NODE: '{{.NODE | default ""}}'
     preconditions:
-      - sh: '[ -n "{{.NODE}}" ]'
-        msg: "NODE variable must be set (e.g., task bootstrap --NODE=192.168.50.87)"
+      - sh: |
+          if [ -z "{{.NODE}}" ]; then
+            echo "NODE variable must be set (e.g. task bootstrap NODE=192.168.50.87)"
+            exit 1
+          fi
     cmds:
       - task: _generate-talos-config
         vars: { NODE: "{{.NODE}}" }
-      - task: _apply-talos-config
       - task: _bootstrap-talos
       - task: _install-cilium
-      - task: _remove-flannel
-      - task: _setup-argocd
+      - task: _test-cilium
+      # TODO: - task: _setup-argocd
 
   _generate-talos-config:
-    vars:
-      NODE:
     cmds:
-      - talosctl gen config homelab https://{{.NODE}}:6443 --overwrite
+      - talosctl gen config homelab https://{{.NODE}}:6443 --force
       - mv ./talosconfig ~/.talos/config
       - talosctl config node {{.NODE}}
       - talosctl config endpoint {{.NODE}}
 
-  _apply-talos-config:
-    cmds:
-      - yq e '.machine.install.disk = "/dev/nvme0n1"' -i controlplane.yaml
-      - talosctl apply-config --insecure --file controlplane.yaml
-      - talosctl patch mc --patch @talos/patches/controlplane-scheduling.yaml
-      - talosctl patch mc --patch @talos/patches/network.yaml
-
   _bootstrap-talos:
     cmds:
+      - yq e '.machine.install.disk = "/dev/nvme0n1"' -i controlplane.yaml
+      - talosctl apply-config --insecure --nodes {{.NODE}} --file controlplane.yaml
+      - sleep 60 # Wait for Talos to apply the config and reboot
       - talosctl bootstrap
+      - talosctl --nodes {{.NODE}} health
+      - talosctl patch mc --patch @talos/patches/controlplane-scheduling.yaml
+      - talosctl patch mc --patch @talos/patches/network.yaml
+      - talosctl kubeconfig --force
 
   _install-cilium:
     cmds:
@@ -46,22 +46,14 @@ tasks:
       - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.1.0/config/crd/standard/gateway.networking.k8s.io_grpcroutes.yaml
       - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.1.0/config/crd/experimental/gateway.networking.k8s.io_tlsroutes.yaml
 
-      - CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
-      - CLI_ARCH=amd64
-      - if [ "$(uname -m)" = "arm64" ]; then CLI_ARCH=arm64; fi
-      - curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-darwin-${CLI_ARCH}.tar.gz{,.sha256sum}
-      - shasum -a 256 -c cilium-darwin-${CLI_ARCH}.tar.gz.sha256sum
-      - sudo tar xzvfC cilium-darwin-${CLI_ARCH}.tar.gz /usr/local/bin
-      - rm cilium-darwin-${CLI_ARCH}.tar.gz{,.sha256sum}
-
       - helm repo add cilium https://helm.cilium.io/
       - helm repo update
 
       - |
-        helm install \
+        helm upgrade --install \
         cilium \
         cilium/cilium \
-        --version 1.15.6 \
+        --version 1.17.4 \
         --namespace kube-system \
         --set ipam.mode=kubernetes \
         --set kubeProxyReplacement=true \
@@ -71,16 +63,25 @@ tasks:
         --set cgroup.hostRoot=/sys/fs/cgroup \
         --set k8sServiceHost=localhost \
         --set k8sServicePort=7445 \
-        --set=gatewayAPI.enabled=true \
-        --set=gatewayAPI.enableAlpn=true \
-        --set=gatewayAPI.enableAppProtocol=true
+        --set gatewayAPI.enabled=true \
+        --set gatewayAPI.enableAlpn=true \
+        --set gatewayAPI.enableAppProtocol=true \
+        --set operator.replicas=1
 
-  _remove-flannel:
-    cmds:
-      - kubectl delete daemonset kube-flannel -n kube-system
-      - kubectl delete cm kube-flannel-cfg -n kube-system
+      - kubectl delete daemonset kube-flannel -n kube-system || true
+      - kubectl delete cm kube-flannel-cfg -n kube-system || true
 
-  _setup-argocd:
+  _test-cilium:
     cmds:
-      - kubectl create namespace argocd
-      - kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      - cilium status --wait
+
+      - kubectl create namespace cilium-test-1 || true
+      - kubectl label namespace cilium-test-1 pod-security.kubernetes.io/enforce=privileged
+      - cilium connectivity test --junit-file report.xml || true
+      - |
+        if grep -qE 'tests="[1-9][0-9]*"' report.xml && grep -q 'errors="0"' report.xml; then
+          echo "✅ Cilium test passed (ignoring warnings)"
+        else
+          echo "❌ Cilium test failed (actual errors)"
+          exit 1
+        fi

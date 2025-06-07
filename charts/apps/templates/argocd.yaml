@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-cd
+  name: argocd
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: {{ .Values.apps.argo-cd.repoURL }}
-    chart: {{ .Values.apps.argo-cd.chart }}
-    targetRevision: {{ .Values.apps.argo-cd.targetRevision }}
+    repoURL: {{.Values.apps.argocd.repoURL}}
+    chart: {{.Values.apps.argocd.chart}}
+    targetRevision: {{.Values.apps.argocd.targetRevision}}
   destination:
     server: https://kubernetes.default.svc
-    namespace: {{ .Values.apps.argo-cd.namespace }}
+    namespace: {{.Values.apps.argocd.namespace}}
   syncPolicy:
     automated:
       selfHeal: true

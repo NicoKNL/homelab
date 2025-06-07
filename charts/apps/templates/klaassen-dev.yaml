@@ -18,6 +18,10 @@ spec:
           allowPrivilegeEscalation: true
         podSecurityContext:
           runAsUser: 0
+        service:
+          type: NodePort
+          nodePorts:
+            http: 30083
   destination:
     server: https://kubernetes.default.svc
     namespace: wordpress

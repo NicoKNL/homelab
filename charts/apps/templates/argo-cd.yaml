@@ -9,6 +9,11 @@ spec:
     repoURL: {{.Values.apps.argocd.repoURL}}
     chart: {{.Values.apps.argocd.chart}}
     targetRevision: {{.Values.apps.argocd.targetRevision}}
+    helm:
+      values: |
+        server:
+          service:
+            type: NodePort
   destination:
     server: https://kubernetes.default.svc
     namespace: {{.Values.apps.argocd.namespace}}

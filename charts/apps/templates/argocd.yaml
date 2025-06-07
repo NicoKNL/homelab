@@ -9,6 +9,10 @@ spec:
     repoURL: {{.Values.apps.argo-cd.repoURL}}
     chart: {{.Values.apps.argo-cd.chart}}
     targetRevision: {{.Values.apps.argo-cd.targetRevision}}
+    helm:
+      parameters:
+        - name: server.service.selectorLabels.app\.kubernetes\.io/name
+          value: argocd-server
   destination:
     server: https://kubernetes.default.svc
     namespace: {{.Values.apps.argo-cd.namespace}}

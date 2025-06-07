@@ -15,8 +15,8 @@ tasks:
       - task: _generate-talos-config
         vars: { NODE: "{{.NODE}}" }
       - task: _bootstrap-talos
-      - task: _install-cilium
-      - task: _test-cilium
+      # - task: _install-cilium
+      # - task: _test-cilium
       - task: _bootstrap-argocd
 
   _generate-talos-config:

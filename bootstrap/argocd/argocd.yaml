@@ -16,22 +16,3 @@ spec:
     automated:
       selfHeal: true
       prune: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: infra
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/NicoKNL/homelab.git
-    targetRevision: HEAD
-    path: charts/infra
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: infra
-  syncPolicy:
-    automated:
-      selfHeal: true
-      prune: true

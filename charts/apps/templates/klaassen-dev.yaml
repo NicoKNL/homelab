@@ -18,6 +18,8 @@ spec:
           allowPrivilegeEscalation: true
         podSecurityContext:
           runAsUser: 0
+        volumePermissions:
+          enabled: true
         service:
           type: NodePort
           nodePorts:

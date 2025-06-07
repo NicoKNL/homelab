@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps
+  name: argo-cd
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/NicoKNL/homelab.git
-    targetRevision: HEAD
-    path: charts
+    repoURL: {{.Values.apps.argocd.repoURL}}
+    chart: {{.Values.apps.argocd.chart}}
+    targetRevision: {{.Values.apps.argocd.targetRevision}}
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: {{.Values.apps.argocd.namespace}}
   syncPolicy:
     automated:
       selfHeal: true

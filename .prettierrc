@@ -1,0 +1,12 @@
+{
+  "overrides": [
+    {
+      "files": "charts/apps/templates/*.yaml",
+      "options": {
+        "parser": "yaml",
+        "embeddedLanguageFormatting": "off",
+        "bracketSpacing": false
+      }
+    }
+  ]
+}

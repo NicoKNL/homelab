@@ -17,7 +17,7 @@ tasks:
       - task: _bootstrap-talos
       - task: _install-cilium
       - task: _test-cilium
-      # TODO: - task: _setup-argocd
+      - task: _bootstrap-argocd
 
   _generate-talos-config:
     cmds:
@@ -33,8 +33,8 @@ tasks:
       - sleep 60 # Wait for Talos to apply the config and reboot
       - talosctl bootstrap
       - talosctl --nodes {{.NODE}} health
-      - talosctl patch mc --patch @talos/patches/controlplane-scheduling.yaml
-      - talosctl patch mc --patch @talos/patches/network.yaml
+      - talosctl patch mc --patch @bootstrap/talos/patches/controlplane-scheduling.yaml
+      - talosctl patch mc --patch @bootstrap/talos/patches/network.yaml
       - talosctl kubeconfig --force
 
   _install-cilium:
@@ -87,3 +87,7 @@ tasks:
           exit 1
         fi
       - kubectl delete namespace cilium-test-1 || true
+
+  _bootstrap-argocd:
+    cmds:
+      - kubectl apply -f bootstrap/argocd/argocd.yaml

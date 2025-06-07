@@ -1,0 +1,7 @@
+apps:
+  argo-cd:
+    enabled: true
+    namespace: argocd
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 8.0.14

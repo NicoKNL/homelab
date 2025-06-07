@@ -3,5 +3,5 @@ apps:
     enabled: true
     namespace: argocd
     repoURL: https://argoproj.github.io/argo-helm
-    chart: argocd
+    chart: argo-cd
     targetRevision: 8.0.14

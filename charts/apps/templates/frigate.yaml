@@ -11,25 +11,47 @@ spec:
     targetRevision: 7.3.0
     helm:
       values: |
-        mqtt:
-          enabled: false
-        cameras:
-          esp32cam:
-            ffmpeg:
-              inputs:
-                - path: rtsp://esp32.local:554/mjpeg/1
-                  roles: [detect]
-            detect:
-              width: 640
-              height: 480
-              fps: 1
-        persistence:
-          config:
+        config:
+          mqtt:
             enabled: false
-        service:
-          type: NodePort
-          nodePorts:
-            http: 30420
+          cameras:
+            esp32cam1:
+              ffmpeg:
+                inputs:
+                  - path: rtsp://192.168.50.1:554/mjpeg/1
+                    roles: [detect]
+              detect:
+                width: 640
+                height: 480
+                fps: 1
+            esp32cam2:
+              ffmpeg:
+                inputs:
+                  - path: rtsp://192.168.50.2:554/mjpeg/1
+                    roles: [detect]
+              detect:
+                width: 640
+                height: 480
+                fps: 1
+            esp32cam3:
+              ffmpeg:
+                inputs:
+                  - path: rtsp://192.168.50.3:554/mjpeg/1
+                    roles: [detect]
+              detect:
+                width: 640
+                height: 480
+                fps: 1
+            esp32cam4:
+              ffmpeg:
+                inputs:
+                  - path: rtsp://192.168.50.4:554/mjpeg/1
+                    roles: [detect]
+              detect:
+                width: 640
+                height: 480
+                fps: 1
+
   destination:
     server: https://kubernetes.default.svc
     namespace: frigate
@@ -37,3 +59,7 @@ spec:
     automated:
       selfHeal: true
       prune: true
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30420

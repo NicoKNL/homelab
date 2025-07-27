@@ -16,7 +16,7 @@ spec:
           secretName: "cloudflared-credentials"
           ingress:
             - hostname: "example2.klaassen.dev"
-              service: http://hello-world:8080
+              service: http://hello-world-nginx.hello-world.svc:80
               originRequest:
                 connectTimeout: "30s"
                 retries: 5

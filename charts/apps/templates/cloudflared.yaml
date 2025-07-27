@@ -20,7 +20,6 @@ spec:
               originRequest:
                 connectTimeout: "30s"
                 retries: 5
-            - service: http_status:404
         logLevel: "info"
         resources:
           limits:

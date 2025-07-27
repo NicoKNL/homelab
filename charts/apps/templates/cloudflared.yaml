@@ -14,9 +14,9 @@ spec:
         cloudflare:
           tunnelName: "homelab"
           secretName: "cloudflared-credentials"
-          ingresses:
+          ingress:
             - hostname: "example2.klaassen.dev"
-              service: http://hello-world:80
+              service: http://hello-world:8080
               originRequest:
                 connectTimeout: "30s"
                 retries: 5

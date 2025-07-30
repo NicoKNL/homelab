@@ -18,7 +18,7 @@ spec:
     chart: kube-prometheus-stack
     targetRevision: 75.15.1
     helm:
-      skipCRDs: true
+      skipCRDs: false
       values: |
         prometheus:
           prometheusSpec:
@@ -39,7 +39,7 @@ spec:
   syncPolicy:
     automated:
       selfHeal: true
-      prune: true
+      prune: false
   syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true

@@ -38,6 +38,29 @@ spec:
               limits:
                 memory: 512Mi
                 cpu: 500m
+        prometheusOperator:
+          enabled: true
+          createCustomResource: true
+          admissionWebhooks:
+            enabled: true
+
+            annotations:
+              argocd.argoproj.io/hook: PreSync
+              argocd.argoproj.io/hook-delete-policy: HookFailed
+
+            patch:
+              annotations:
+                argocd.argoproj.io/hook: PreSync
+                argocd.argoproj.io/hook-delete-policy: HookFailed
+
+            mutatingWebhookConfiguration:
+              annotations:
+                argocd.argoproj.io/hook: PreSync
+
+            validatingWebhookConfiguration:
+              annotations:
+                argocd.argoproj.io/hook: PreSync
+
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-prometheus

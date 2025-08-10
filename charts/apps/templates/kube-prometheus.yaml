@@ -25,6 +25,8 @@ spec:
             additionalScrapeConfigs:
               name: additional-scrape-configs
               key: additional-scrape-configs.yaml
+            scrapeConfigNamespaceSelector: {}
+            scrapeConfigSelector: {}
             resources:
               requests:
                 memory: 256Mi

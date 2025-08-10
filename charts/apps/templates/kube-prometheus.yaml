@@ -22,7 +22,7 @@ spec:
         prometheus:
           prometheusSpec:
             retention: 30d
-            additionalScrapeConfigsSecret: {}
+            additionalScrapeConfigsSecret:
               enabled: true
               name: additional-scrape-configs
               key: additional-scrape-configs.yaml

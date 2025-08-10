@@ -43,6 +43,15 @@ spec:
             type: pvc
             storageClassName: nfs-client
             size: 5Gi  # Stores dashboards, data sources, and user preferences
+          initChownData:
+            enabled: false
+          podSecurityContext:
+            fsGroup: 472
+            fsGroupChangePolicy: "OnRootMismatch"
+          securityContext:
+            runAsUser: 472
+            runAsGroup: 472
+            runAsNonRoot: true
         alertmanager:
           alertmanagerSpec:
             storage:

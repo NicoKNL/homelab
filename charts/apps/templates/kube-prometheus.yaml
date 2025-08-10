@@ -29,6 +29,30 @@ spec:
               limits:
                 memory: 512Mi
                 cpu: 500m
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: nfs-client
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi  # Stores metrics data, time series, and historical data
+        grafana:
+          persistence:
+            enabled: true
+            type: pvc
+            storageClassName: nfs-client
+            size: 5Gi  # Stores dashboards, data sources, and user preferences
+        alertmanager:
+          alertmanagerSpec:
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: nfs-client
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 2Gi  # Stores alert history and silences
         prometheusOperator:
           enabled: true
           createCustomResource: true

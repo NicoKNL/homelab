@@ -22,6 +22,9 @@ spec:
         prometheus:
           prometheusSpec:
             retention: 30d
+            additionalScrapeConfigs:
+              name: additional-scrape-configs
+              key: additional-scrape-configs.yaml
             resources:
               requests:
                 memory: 256Mi

@@ -77,7 +77,7 @@ spec:
           enabled: true
           createCustomResource: true
           admissionWebhooks:
-            enabled: true
+            enabled: false
 
   destination:
     server: https://kubernetes.default.svc

@@ -42,7 +42,7 @@ spec:
                       storage: 10Gi  # Stores metrics data, time series, and historical data
           service:
             type: NodePort
-            nodePort: 30090
+            nodePort: 30082
         grafana:
           persistence:
             enabled: true
@@ -60,7 +60,7 @@ spec:
             runAsNonRoot: true
           service:
             type: NodePort
-            nodePort: 30080
+            nodePort: 30081
         alertmanager:
           alertmanagerSpec:
             storage:

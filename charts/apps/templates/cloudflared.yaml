@@ -35,3 +35,14 @@ spec:
     automated:
       selfHeal: true
       prune: true
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: cloudflared-credentials
+  namespace: cloudflared
+  annotations:
+    operator.1password.io/auto-restart: "true"
+spec:
+  itemPath: "vaults/homelab/items/cloudflared-credentials"
+  secretName: cloudflared-credentials

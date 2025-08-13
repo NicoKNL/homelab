@@ -15,6 +15,11 @@ spec:
           tunnelName: "homelab"
           secretName: "cloudflared-credentials"
           ingress:
+            - hostname: "example1.klaassen.dev"
+              service: http://hello-world-nginx.hello-world.svc:80
+              originRequest:
+                connectTimeout: "30s"
+                retries: 5
             - hostname: "example2.klaassen.dev"
               service: http://hello-world-nginx.hello-world.svc:80
               originRequest:

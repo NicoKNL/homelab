@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextjs-example
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/NicoKNL/nextjs-k8s-example.git
+    path: helm/nextjs-app
+    targetRevision: main
+    helm:
+      values: |
+        replicaCount: 1
+        image:
+          repository: ghcr.io/nicoknl/nextjs-k8s-example
+          tag: latest
+        imagePullSecrets:
+          - name: ghcr-secret
+        service:
+          type: ClusterIP
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nextjs-example
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: nextjs-ghcr-secret
+  namespace: nextjs-example
+  annotations:
+    operator.1password.io/auto-restart: "true"
+spec:
+  itemPath: "vaults/homelab/items/nextjs-ghcr-secret"
+  secretName: ghcr-secret

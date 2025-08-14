@@ -15,12 +15,12 @@ spec:
           tunnelName: "homelab"
           secretName: "cloudflared-credentials"
           ingress:
-            - hostname: "example1.klaassen.dev"
-              service: http://hello-world-nginx.hello-world.svc:80
+            - hostname: "nextjs.klaassen.dev"
+              service: http://nextjs-app-service.nextjs-example.svc:80
               originRequest:
                 connectTimeout: "30s"
                 retries: 5
-            - hostname: "example2.klaassen.dev"
+            - hostname: "nginx.klaassen.dev"
               service: http://hello-world-nginx.hello-world.svc:80
               originRequest:
                 connectTimeout: "30s"

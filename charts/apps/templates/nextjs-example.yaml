@@ -33,8 +33,6 @@ spec:
     automated:
       selfHeal: true
       prune: true
-    syncOptions:
-      - CreateNamespace=true
 ---
 apiVersion: onepassword.com/v1
 kind: OnePasswordItem
@@ -46,3 +44,16 @@ metadata:
 spec:
   itemPath: "vaults/homelab/items/nextjs-ghcr-secret"
   secretName: ghcr-secret
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: argocd-nextjs-repo-secret
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  annotations:
+    operator.1password.io/auto-restart: "true"
+spec:
+  itemPath: "vaults/homelab/items/argocd-nextjs-repo-secret"
+  secretName: argocd-nextjs-repo-secret

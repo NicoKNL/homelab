@@ -16,7 +16,7 @@ spec:
           secretName: "cloudflared-credentials"
           ingress:
             - hostname: "nextjs.klaassen.dev"
-              service: http://nextjs-app-service.nextjs-example.svc:80
+              service: http://nextjs-example-nextjs-app.nextjs-example.svc:80
               originRequest:
                 connectTimeout: "30s"
                 retries: 5

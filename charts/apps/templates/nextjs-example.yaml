@@ -41,6 +41,7 @@ metadata:
   namespace: nextjs-example
   annotations:
     operator.1password.io/auto-restart: "true"
+type: kubernetes.io/dockerconfigjson
 spec:
   itemPath: "vaults/homelab/items/nextjs-ghcr-secret"
 ---
@@ -49,8 +50,6 @@ kind: OnePasswordItem
 metadata:
   name: argocd-nextjs-repo-secret
   namespace: argocd
-  labels:
-    argocd.argoproj.io/secret-type: repository
   annotations:
     operator.1password.io/auto-restart: "true"
 spec:

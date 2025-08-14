@@ -16,7 +16,7 @@ spec:
           repository: ghcr.io/nicoknl/nextjs-k8s-example
           tag: latest
         imagePullSecrets:
-          - name: ghcr-secret
+          - name: nextjs-ghcr-secret
         service:
           type: ClusterIP
         resources:
@@ -43,7 +43,6 @@ metadata:
     operator.1password.io/auto-restart: "true"
 spec:
   itemPath: "vaults/homelab/items/nextjs-ghcr-secret"
-  secretName: ghcr-secret
 ---
 apiVersion: onepassword.com/v1
 kind: OnePasswordItem
@@ -56,4 +55,3 @@ metadata:
     operator.1password.io/auto-restart: "true"
 spec:
   itemPath: "vaults/homelab/items/argocd-nextjs-repo-secret"
-  secretName: argocd-nextjs-repo-secret

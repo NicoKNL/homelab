@@ -51,7 +51,8 @@ metadata:
   name: argocd-nextjs-repo-secret
   namespace: argocd
   annotations:
-    argocd.argoproj.io/secret-type: repository
     operator.1password.io/auto-restart: "true"
+  labels:
+    argocd.argoproj.io/secret-type: repository
 spec:
   itemPath: "vaults/homelab/items/argocd-nextjs-repo-secret"

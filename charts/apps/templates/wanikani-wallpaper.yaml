@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wanikani-wallpaper
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/NicoKNL/wanikani-wallpaper2.git
+    path: helm/nextjs-app
+    targetRevision: main
+    helm:
+      values: |
+        replicaCount: 1
+        image:
+          repository: ghcr.io/nicoknl/wanikani-wallpaper2
+          tag: latest
+        imagePullSecrets:
+          - name: nextjs-ghcr-secret
+        service:
+          type: ClusterIP
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: wanikani-wallpaper
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: nextjs-ghcr-secret
+  namespace: wanikani-wallpaper
+  annotations:
+    operator.1password.io/auto-restart: "true"
+type: kubernetes.io/dockerconfigjson
+spec:
+  itemPath: "vaults/homelab/items/nextjs-ghcr-secret"
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: argocd-nextjs-repo-secret
+  namespace: argocd
+  annotations:
+    operator.1password.io/auto-restart: "true"
+spec:
+  itemPath: "vaults/homelab/items/argocd-nextjs-repo-secret"

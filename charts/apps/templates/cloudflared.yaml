@@ -15,6 +15,11 @@ spec:
           tunnelName: "homelab"
           secretName: "cloudflared-credentials"
           ingress:
+            - hostname: "wk-wallpaper.klaassen.dev"
+              service: http://wanikani-wallpaper-wanikani-wallpaper2-app.wanikani-wallpaper.svc:80
+              originRequest:
+                connectTimeout: "30s"
+                retries: 5
             - hostname: "nextjs.klaassen.dev"
               service: http://nextjs-example-nextjs-app.nextjs-example.svc:80
               originRequest:
